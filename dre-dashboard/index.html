@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRE - Planned vs Actual</title>
+</head>
+<body>
+
+<style>
+:root{--text-primary:#1a1a1a;--text-secondary:#555;--surface-1:#fff;--surface-2:#f5f7fa;--border:#d0d7de;--border-strong:#b0b8c1;--radius:6px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#e6e6e6;--text-secondary:#a0a0a0;--surface-1:#161b22;--surface-2:#1f262e;--border:#30363d;--border-strong:#484f58}
+tbody tr.calc-row{background:#1a2d3d !important}}
+body{background:var(--surface-1);max-width:1200px;margin:0 auto;padding:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;font-size:13px;color:var(--text-primary)}
+.panel{background:var(--surface-1);border:0.5px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:10px}
+.panel-title{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.ctrl-group label{font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px}
+.checkbox-row{display:flex;flex-wrap:wrap;gap:6px 14px}
+.checkbox-row label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;color:var(--text-primary)}
+.checkbox-row input[type=checkbox]{accent-color:#1F4E79;width:13px;height:13px}
+select,input[type=text]{font-size:12px;padding:4px 8px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);width:100%}
+.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.filter-item{display:flex;align-items:center;gap:6px}
+.filter-item span{font-size:12px;color:var(--text-secondary);white-space:nowrap;min-width:90px}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:0.5px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr:first-child th{background:#1F4E79;color:#fff;text-align:center;padding:6px 4px;font-weight:700;font-size:12px}
+thead tr:nth-child(2) th{background:#2E75B6;color:#fff;text-align:center;padding:5px 4px;font-size:11px;font-weight:400}
+tbody tr:nth-child(odd){background:var(--surface-2)}
+tbody tr:nth-child(even){background:var(--surface-1)}
+tbody tr.calc-row{background:#DEEAF1 !important;font-weight:700}
+[data-mode="dark"] tbody tr.calc-row{background:#1a2d3d !important}
+td{padding:5px 6px;border-bottom:0.5px solid var(--border);white-space:nowrap}
+td.label{min-width:200px;max-width:240px;white-space:normal;color:var(--text-primary);font-size:12px}
+td.num{text-align:right;min-width:78px;font-variant-numeric:tabular-nums}
+td.pos{color:#006100;background:#C6EFCE !important}
+td.neg{color:#9C0006;background:#FFC7CE !important}
+.periodo-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.periodo-row label{font-size:12px;color:var(--text-secondary)}
+.periodo-row input{width:90px}
+.legend{font-size:11px;color:var(--text-secondary);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:4px}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.page-title{font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:12px;padding:0}
+</style>
+
+<h2 class="sr-only">DRE – Demonstrativo de Resultados: Planejado x Realizado com filtros interativos</h2>
+
+<p class="page-title">DRE — Demonstrativo de Resultados do Exercício</p>
+
+<div class="panel">
+  <div class="controls-grid">
+    <div>
+      <div class="panel-title">Exibir colunas</div>
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="chk-plan" checked> Planejado</label>
+        <label><input type="checkbox" id="chk-real" checked> Realizado</label>
+        <label><input type="checkbox" id="chk-var" checked> Variação ($)</label>
+        <label><input type="checkbox" id="chk-pct" checked> Variação (%)</label>
+      </div>
+    </div>
+    <div>
+      <div class="panel-title">Horizonte de análise</div>
+      <div class="periodo-row">
+        <label>De: <input type="text" id="de" value="fev/2014"></label>
+        <label>Até: <input type="text" id="ate" value="mai/2014"></label>
+      </div>
+    </div>
+    <div>
+      <div class="panel-title">Variação</div>
+      <select id="tipo-var">
+        <option>Planejado X Realizado</option>
+        <option>Mês X Mês Anterior</option>
+        <option>Ano X Ano Anterior</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-title">Filtros</div>
+  <div class="filter-grid">
+    <div class="filter-item"><span>Canais de Distrib.</span><select id="f-canal"><option>Todos</option><option>Canal A</option><option>Canal B</option><option>Canal C</option></select></div>
+    <div class="filter-item"><span>Centro de Resultado</span><select id="f-centro"><option>Todos</option><option>Centro 1</option><option>Centro 2</option></select></div>
+    <div class="filter-item"><span>Produtos</span><select id="f-prod"><option>Todos</option><option>Produto A</option><option>Produto B</option></select></div>
+    <div class="filter-item"><span>Contas</span><select id="f-conta"><option>Todas</option><option>Receita</option><option>Custo</option><option>Despesa</option></select></div>
+    <div class="filter-item"><span>Unidades de Negócio</span><select id="f-un"><option>Todas</option><option>UN 1</option><option>UN 2</option></select></div>
+    <div class="filter-item"><span>Matérias-Prima</span><select id="f-mp"><option>Todas</option><option>MP A</option><option>MP B</option></select></div>
+    <div class="filter-item"><span>Cargos e Funcionários</span><select id="f-cargo"><option>Todos</option><option>Gerência</option><option>Operacional</option></select></div>
+    <div class="filter-item"><span>Gastos Pessoal</span><select id="f-gp"><option>Todos</option><option>Salário</option><option>Benefícios</option></select></div>
+  </div>
+</div>
+
+<div class="tbl-wrap">
+  <table id="dre-table">
+    <thead id="dre-thead"></thead>
+    <tbody id="dre-tbody"></tbody>
+  </table>
+</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#C6EFCE;border:0.5px solid #006100"></div><span style="color:#006100">Realizado &gt; Planejado (favorável)</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#FFC7CE;border:0.5px solid #9C0006"></div><span style="color:#9C0006">Realizado &lt; Planejado (desfavorável)</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#DEEAF1;border:0.5px solid #2E75B6"></div><span>Linha calculada</span></div>
+</div>
+
+<script>
+const MONTHS = ["fev/2014","mar/2014","abr/2014","mai/2014"];
+
+const RAW = {
+  "RECEITA DE VENDAS BRUTA":        { type:"input", data:[[467300,523002],[467300,321471],[467300,304690],[467300,410000]] },
+  "DEDUÇÕES DA RECEITA":            { type:"input", data:[[88323,97430],[88323,55392],[88323,91385],[88323,78000]] },
+  "RECEITA VENDAS LÍQUIDA":         { type:"calc",  fn: (d,m) => [d["RECEITA DE VENDAS BRUTA"].data[m][0]-d["DEDUÇÕES DA RECEITA"].data[m][0], d["RECEITA DE VENDAS BRUTA"].data[m][1]-d["DEDUÇÕES DA RECEITA"].data[m][1]] },
+  "CUSTO DOS PRODUTOS E SERVIÇOS":  { type:"input", data:[[89378,98685],[89378,55266],[89378,70273],[89378,85000]] },
+  "MARGEM DE CONTRIBUIÇÃO":         { type:"calc",  fn: (d,m) => [d["RECEITA VENDAS LÍQUIDA"].fn(d,m)[0]-d["CUSTO DOS PRODUTOS E SERVIÇOS"].data[m][0], d["RECEITA VENDAS LÍQUIDA"].fn(d,m)[1]-d["CUSTO DOS PRODUTOS E SERVIÇOS"].data[m][1]] },
+  "GASTOS E DESPESAS":              { type:"input", data:[[174026,51579],[174018,110939],[167168,29273],[167168,120000]] },
+  "EBITDA":                         { type:"calc",  fn: (d,m) => [d["MARGEM DE CONTRIBUIÇÃO"].fn(d,m)[0]-d["GASTOS E DESPESAS"].data[m][0], d["MARGEM DE CONTRIBUIÇÃO"].fn(d,m)[1]-d["GASTOS E DESPESAS"].data[m][1]] },
+  "DEPRECIAÇÃO":                    { type:"input", data:[[97,0],[97,0],[5097,0],[5097,2000]] },
+  "RESULTADO OPERACIONAL":          { type:"calc",  fn: (d,m) => [d["EBITDA"].fn(d,m)[0]-d["DEPRECIAÇÃO"].data[m][0], d["EBITDA"].fn(d,m)[1]-d["DEPRECIAÇÃO"].data[m][1]] },
+};
+
+const LABELS = {
+  "RECEITA DE VENDAS BRUTA":       "(+) RECEITA DE VENDAS BRUTA",
+  "DEDUÇÕES DA RECEITA":           "(-) DEDUÇÕES DA RECEITA",
+  "RECEITA VENDAS LÍQUIDA":        "(=) RECEITA VENDAS LÍQUIDA",
+  "CUSTO DOS PRODUTOS E SERVIÇOS": "(-) CUSTO DOS PRODUTOS E SERVIÇOS",
+  "MARGEM DE CONTRIBUIÇÃO":        "(=) MARGEM DE CONTRIBUIÇÃO",
+  "GASTOS E DESPESAS":             "(-) GASTOS E DESPESAS",
+  "EBITDA":                        "(=) EBITDA",
+  "DEPRECIAÇÃO":                   "(-) DEPRECIAÇÃO",
+  "RESULTADO OPERACIONAL":         "(=) RESULTADO OPERACIONAL",
+};
+
+function fmt(v){ return v===0?"-":v.toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtPct(v){ if(v===0)return"-"; return Math.round(v*100)+"%"; }
+
+function getVal(key,m){
+  const r=RAW[key];
+  if(r.type==="input") return r.data[m];
+  return r.fn(RAW,m);
+}
+
+function render(){
+  const showPlan=document.getElementById("chk-plan").checked;
+  const showReal=document.getElementById("chk-real").checked;
+  const showVar =document.getElementById("chk-var").checked;
+  const showPct =document.getElementById("chk-pct").checked;
+
+  const thead=document.getElementById("dre-thead");
+  const tbody=document.getElementById("dre-tbody");
+
+  // Build header
+  let h1="<tr><th rowspan='2' style='min-width:200px;text-align:left;padding:6px 8px'>Estrutura</th>";
+  MONTHS.forEach(m=>{
+    let span=0;
+    if(showPlan)span++;if(showReal)span++;if(showVar)span++;if(showPct)span++;
+    if(span>0) h1+=`<th colspan='${span}'>${m}</th>`;
+  });
+  h1+="</tr>";
+
+  let h2="<tr>";
+  MONTHS.forEach(()=>{
+    if(showPlan) h2+="<th>Planejado</th>";
+    if(showReal) h2+="<th>Realizado</th>";
+    if(showVar)  h2+="<th>Variação ($)</th>";
+    if(showPct)  h2+="<th>Variação (%)</th>";
+  });
+  h2+="</tr>";
+  thead.innerHTML=h1+h2;
+
+  // Build body
+  let rows="";
+  Object.keys(RAW).forEach(key=>{
+    const isCalc=RAW[key].type==="calc";
+    const cls=isCalc?"calc-row":"";
+    rows+=`<tr class='${cls}'><td class='label'>${LABELS[key]}</td>`;
+    MONTHS.forEach((_,mi)=>{
+      const [plan,real]=getVal(key,mi);
+      const varD=real-plan;
+      const varP=plan!==0?varD/plan:0;
+      const posNeg=varD>0?"pos":varD<0?"neg":"";
+      if(showPlan) rows+=`<td class='num'>${fmt(plan)}</td>`;
+      if(showReal) rows+=`<td class='num'>${fmt(real)}</td>`;
+      if(showVar)  rows+=`<td class='num ${posNeg}'>${varD>=0?"":"-"}${fmt(Math.abs(varD))}</td>`;
+      if(showPct)  rows+=`<td class='num ${posNeg}'>${varD>=0?"":"-"}${fmtPct(Math.abs(varP))}</td>`;
+    });
+    rows+="</tr>";
+  });
+  tbody.innerHTML=rows;
+}
+
+["chk-plan","chk-real","chk-var","chk-pct"].forEach(id=>{
+  document.getElementById(id).addEventListener("change",render);
+});
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Open Ticket - Company</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #eae6df; margin: 0; padding: 15px; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+        .sistema-header { width: 100%; max-width: 560px; background-color: #f78503; color: rgb(9, 7, 161); padding: 10px 20px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .sistema-header h1 { margin: 0; font-size: 18px; }
+        .status-sync { font-size: 12px; opacity: 0.85; }
+
+        .cartao { width: 100%; max-width: 560px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; box-sizing: border-box; }
+        .painel-header { background-color: #f78503; color: rgb(9, 7, 161); padding: 15px; font-size: 16px; font-weight: bold; }
+
+        form { padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+        .campo { display: flex; flex-direction: column; gap: 5px; }
+        .campo label { font-weight: bold; color: #333; font-size: 14px; }
+        .form-control { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; box-sizing: border-box; width: 100%; }
+        textarea.form-control { height: 100px; resize: none; }
+
+        .btn-enviar-chamado { background-color: #1103c9; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; margin-top: 5px; }
+        .btn-enviar-chamado:disabled { opacity: 0.6; cursor: default; }
+
+        .zona-drop { border: 3px dashed #1103c9; border-radius: 8px; padding: 20px 10px; text-align: center; cursor: pointer; background: #f5f6ff; font-size: 14px; font-weight: bold; color: #1103c9; transition: background .15s ease, border-color .15s ease; }
+        .zona-drop:hover { background: #eceeff; border-color: #0a02a0; }
+        .zona-drop .icone-anexo { font-size: 26px; display: block; margin-bottom: 6px; }
+        .zona-drop .ajuda-anexo { display: block; font-weight: normal; font-size: 11px; color: #666; margin-top: 4px; }
+        .lista-anexos-preview { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+        .anexo-chip { display: flex; align-items: center; justify-content: space-between; background: #f0f2f5; border: 1px solid #d5d8dc; border-radius: 5px; padding: 6px 10px; font-size: 12px; }
+        .anexo-chip .nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 400px; }
+        .anexo-chip button { border: none; background: #cc0000; color: white; border-radius: 3px; cursor: pointer; font-size: 11px; padding: 2px 6px; }
+
+        /* Tela de confirmação após o envio */
+        .confirmacao { display: none; flex-direction: column; align-items: center; text-align: center; padding: 40px 20px; gap: 10px; }
+        .confirmacao.ativa { display: flex; }
+        .confirmacao .icone { font-size: 42px; }
+        .confirmacao h2 { margin: 0; color: #0f8315; }
+        .confirmacao p { color: #555; margin: 0; }
+        .btn-novo-chamado { margin-top: 10px; background-color: #146654; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="sistema-header">
+        <h1>Company - Operational Entry</h1>
+        <span class="status-sync" id="statusSync">🔄 Verificando conexão...</span>
+    </div>
+
+    <div class="cartao">
+        <div class="painel-header">🧾 Abrir Chamado</div>
+
+        <form id="formChamado" onsubmit="criarNovoChamado(event)">
+
+            <!-- CAMPO: FUNCIONÁRIO SOLICITANTE -->
+            <div class="campo">
+                <label>Funcionário Solicitante:</label>
+                <select id="solicitante" class="form-control" required>
+                    <option value="">Selecione o Funcionário...</option>
+                    <option value="EMP1">Employee 1 - DIRETORIA</option>
+                    <option value="EMP2">Employee 2 - DIRETORIA</option>
+                    <option value="EMP3">Employee 3 - DIRETORIA</option>
+                    <option value="EMP4">Employee 4 - FINANCEIRO</option>
+                    <option value="EMP5">Employee 5 - FINANCEIRO</option>
+                    <option value="EMP6">Employee 6 - FINANCEIRO</option>
+                    <option value="EMP7">Employee 7 - FINANCEIRO</option>
+                    <option value="EMP8">Employee 8 - FINANCEIRO</option>
+                    <option value="EMP9">Employee 9 - FINANCEIRO</option>
+                    <option value="EMP10">Employee 10 - PRODUÇÃO</option>
+                    <option value="EMP11">Employee 11 - PRODUÇÃO</option>
+                    <option value="EMP12">Employee 12 - PRODUÇÃO</option>
+                    <option value="EMP13">Employee 13 - PRODUÇÃO</option>
+                    <option value="EMP14">Employee 14 - ALMOXERIFADO</option>
+                    <option value="EMP15">Employee 15 - ALMOXERIFADO</option>
+                    <option value="EMP16">Employee 16 - RH</option>
+                    <option value="EMP17">Employee 17 - RH</option>
+                    <option value="EMP18">Employee 18 - RH</option>
+                    <option value="EMP19">Employee 19 - RH</option>
+                    <option value="EMP20">Employee 20 - PLANEJAMENTO</option>
+                    <option value="EMP9">Employee 9 - FROTAS</option>
+                    <option value="EMP21">Employee 21 - FROTAS</option>
+                    <option value="EMP22">Employee 22 - FROTAS</option>
+                    <option value="EMP23">Employee 23 - SESMT</option>
+                </select>
+            </div>
+
+            <!-- CAMPO: SETOR SOLICITANTE -->
+            <div class="campo">
+                <label>Setor Solicitante:</label>
+                <select id="setor" class="form-control" required>
+                    <option value="">Selecione o Setor...</option>
+                    <option value="PRODUÇÃO">PRODUÇÃO</option>
+                    <option value="RH">RH</option>
+                    <option value="DIRETORIA">DIRETORIA</option>
+                    <option value="FINANCEIRO">FINANCEIRO</option>
+                    <option value="SEGURANÇA">SEGURANÇA</option>
+                    <option value="COORDENAÇÃO">COORDENAÇÃO</option>
+                    <option value="FROTAS">FROTAS</option>
+                    <option value="ALMOXERIFADO">ALMOXERIFADO</option>
+                    <option value="PLANEJAMENTO">PLANEJAMENTO</option>
+                    <option value="SESMT">SESMT</option>
+                </select>
+            </div>
+
+            <!-- CAMPO: DESTINATÁRIO -->
+            <div class="campo">
+                <label>Destinatário:</label>
+                <select id="usuario" class="form-control" required>
+                    <option value="">Selecione o Funcionário...</option>
+                    <option value="EMP1">Employee 1 - DIRETORIA</option>
+                    <option value="EMP2">Employee 2 - DIRETORIA</option>
+                    <option value="EMP3">Employee 3 - DIRETORIA</option>
+                    <option value="EMP4">Employee 4 - FINANCEIRO</option>
+                    <option value="EMP5">Employee 5 - FINANCEIRO</option>
+                    <option value="EMP6">Employee 6 - FINANCEIRO</option>
+                    <option value="EMP7">Employee 7 - FINANCEIRO</option>
+                    <option value="EMP8">Employee 8 - FINANCEIRO</option>
+                    <option value="EMP9">Employee 9 - FINANCEIRO</option>
+                    <option value="EMP10">Employee 10 - PRODUÇÃO</option>
+                    <option value="EMP11">Employee 11 - PRODUÇÃO</option>
+                    <option value="EMP12">Employee 12 - PRODUÇÃO</option>
+                    <option value="EMP13">Employee 13 - PRODUÇÃO</option>
+                    <option value="EMP14">Employee 14 - ALMOXERIFADO</option>
+                    <option value="EMP15">Employee 15 - ALMOXERIFADO</option>
+                    <option value="EMP16">Employee 16 - RH</option>
+                    <option value="EMP17">Employee 17 - RH</option>
+                    <option value="EMP18">Employee 18 - RH</option>
+                    <option value="EMP19">Employee 19 - RH</option>
+                    <option value="EMP20">Employee 20 - PLANEJAMENTO</option>
+                    <option value="EMP9">Employee 9 - FROTAS</option>
+                    <option value="EMP21">Employee 21 - FROTAS</option>
+                    <option value="EMP22">Employee 22 - FROTAS</option>
+                    <option value="EMP23">Employee 23 - SESMT</option>
+                </select>
+            </div>
+
+            <!-- CAMPO: DESCRIÇÃO DO PROBLEMA -->
+            <div class="campo">
+                <label>Descrição:</label>
+                <textarea id="descricao" class="form-control" placeholder="Explique detalhadamente o problema..." required></textarea>
+            </div>
+
+            <!-- SEÇÃO DE ANEXOS E LINKS -->
+            <div class="campo">
+                <label>Anexos (PDF, imagens, áudios, documentos):</label>
+                <div class="zona-drop" onclick="document.getElementById('inputAnexos').click()">
+                    <span class="icone-anexo">📎</span>
+                    Clique para selecionar arquivos
+                    <span class="ajuda-anexo">Máximo 5MB por arquivo</span>
+                </div>
+                <input type="file" id="inputAnexos" multiple style="display:none">
+                <div id="listaAnexosPreview" class="lista-anexos-preview"></div>
+            </div>
+
+            <div class="campo">
+                <label>Link de Pagamento (opcional):</label>
+                <input type="text" id="linkPagamento" class="form-control" placeholder="https://...">
+            </div>
+
+            <div class="campo">
+                <label>Outro Link (opcional):</label>
+                <input type="text" id="outroLink" class="form-control" placeholder="https://...">
+            </div>
+
+            <button type="submit" id="btnEnviar" class="btn-enviar-chamado">➤ Enviar Chamado</button>
+        </form>
+
+        <div class="confirmacao" id="telaConfirmacao">
+            <span class="icone">✅</span>
+            <h2>Chamado enviado!</h2>
+            <p>Sua solicitação já está na fila do painel administrativo.</p>
+            <button class="btn-novo-chamado" onclick="abrirNovoChamado()">Abrir outro chamado</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================================================
+        // CONFIGURAÇÃO DO BANCO COMPARTILHADO (Firebase Realtime Database)
+        // Use A MESMA URL configurada no painel administrativo!
+        // ==========================================================================
+        const FIREBASE_URL = "https://SEU-PROJETO-default-rtdb.firebaseio.com"; // <<-- TROQUE AQUI
+
+        function setStatusSync(texto) {
+            const el = document.getElementById('statusSync');
+            if (el) el.textContent = texto;
+        }
+        setStatusSync('🟢 Pronto para enviar');
+
+        // ---- ANEXOS: controla os arquivos escolhidos antes de enviar o chamado ----
+        let anexosSelecionados = [];
+        const LIMITE_ANEXO_MB = 5;
+
+        document.getElementById('inputAnexos').addEventListener('change', async (e) => {
+            const arquivos = Array.from(e.target.files);
+            for (const arquivo of arquivos) {
+                if (arquivo.size > LIMITE_ANEXO_MB * 1024 * 1024) {
+                    alert(`O arquivo "${arquivo.name}" passa de ${LIMITE_ANEXO_MB}MB e não foi anexado.`);
+                    continue;
+                }
+                try {
+                    const dataUrl = await lerArquivoComoBase64(arquivo);
+                    anexosSelecionados.push({ nome: arquivo.name, tipo: arquivo.type, tamanho: arquivo.size, dataUrl });
+                } catch (err) {
+                    alert(`Não foi possível ler o arquivo "${arquivo.name}".`);
+                }
+            }
+            renderizarAnexosPreview();
+            e.target.value = '';
+        });
+
+        function lerArquivoComoBase64(arquivo) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(arquivo);
+            });
+        }
+
+        function renderizarAnexosPreview() {
+            const box = document.getElementById('listaAnexosPreview');
+            if (!box) return;
+            box.innerHTML = anexosSelecionados.map((a, i) => `
+                <div class="anexo-chip">
+                    <span class="nome">📎 ${a.nome}</span>
+                    <button type="button" onclick="removerAnexo(${i})" title="Remover anexo">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function removerAnexo(index) {
+            anexosSelecionados.splice(index, 1);
+            renderizarAnexosPreview();
+        }
+
+        async function criarNovoChamado(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('btnEnviar');
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+
+            const solicitante = document.getElementById('solicitante').value;
+            const setor = document.getElementById('setor').value;
+            const usuario = document.getElementById('usuario').value;
+            const descricao = document.getElementById('descricao').value;
+            const linkPagamento = document.getElementById('linkPagamento').value;
+            const outroLink = document.getElementById('outroLink').value;
+
+            const novoChamado = {
+                id: Date.now(),
+                timestamp: Date.now(),
+                solicitante: solicitante,
+                setor: setor,
+                usuario: usuario,
+                descricao: descricao,
+                anexos: anexosSelecionados,
+                linkPagamento: linkPagamento,
+                outroLink: outroLink,
+                status: "Pendente",
+                data: new Date().toLocaleString('pt-BR')
+            };
+
+            try {
+                const resp = await fetch(`${FIREBASE_URL}/chamados/${novoChamado.id}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(novoChamado)
+                });
+                if (!resp.ok) throw new Error('Falha ao gravar no banco');
+
+                document.getElementById('formChamado').style.display = 'none';
+                document.getElementById('telaConfirmacao').classList.add('ativa');
+                setStatusSync('✅ Enviado com sucesso');
+                anexosSelecionados = [];
+                renderizarAnexosPreview();
+            } catch (err) {
+                alert('Não foi possível enviar o chamado. Verifique sua internet ou avise o setor de TI (FIREBASE_URL pode estar incorreto).');
+                setStatusSync('⚠️ Falha ao enviar');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '➤ Enviar Chamado';
+            }
+        }
+
+        function abrirNovoChamado() {
+            document.getElementById('formChamado').reset();
+            document.getElementById('formChamado').style.display = 'flex';
+            document.getElementById('telaConfirmacao').classList.remove('ativa');
+            setStatusSync('🟢 Pronto para enviar');
+        }
+    </script>
+</body>
+</html>
