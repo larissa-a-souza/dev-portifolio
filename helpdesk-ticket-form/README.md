@@ -1,22 +1,23 @@
-# Helpdesk Ticket Form
+# Helpdesk Ticket Form & Admin Panel 🧾🤖
 
-Web form that lets employees open internal tickets (requests) with description, attachments and payment links.
-Tickets are saved in a Firebase Realtime Database and read by an admin panel.
+A web-based internal ticketing system built to centralize corporate technical requests, prevent communication gaps, and streamline support workflows.
+
+## 🖥️ System Interface
+
+### Employee Submission Form
+![Form Screen](./tela.png)
+
+### Integrated Ticket Queue & Admin Panel
+![Admin Screen](./tela02.png)
 
 > **Status:** In progress 🚧
 
-## Features
-- Select requester and department
-- Attach files and add links
-- Sends the ticket to the database and shows a confirmation screen
-- Works on mobile
+## 🛠 Tech Stack
+- **Frontend**: HTML5 & CSS3 (Custom Responsive Dark/Orange UI)
+- **Logic**: Vanilla JavaScript
+- **Database**: Firebase Realtime Database (via REST API integrations)
 
-## Tech stack
-HTML, CSS, JavaScript, Firebase Realtime Database (REST API).
-
-## Setup
-1. Create your own Firebase Realtime Database.
-2. In `index.html`, replace `FIREBASE_URL` with your database URL.
-3. Open `index.html` in your browser.
-
-Names and company data in this repository are fictional.
+## 💡 Key Features
+- **Department Routing:** Requesters can select their names and target operational areas efficiently.
+- **Attachment Support:** Native support for handling file uploads (PDFs, images, logs, documents).
+- **Live Ticket Queue:** Administrative view featuring live queue counters, open status logs, and instant resolution/reply capabilities.
