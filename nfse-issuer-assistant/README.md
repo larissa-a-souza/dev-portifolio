@@ -1,41 +1,30 @@
-# NFS-e Issuer Assistant
+# National Service Invoice Assistant (RPA Robot) 🤖💼
 
-Automation script that helps issue service invoices (NFS-e) in the Brazilian national portal.
-It reads an Excel draft, finds the client's location, fills the form and pauses for a human to confirm the tax rate.
+An automated Robotic Process Automation (RPA) script engineered to eliminate manual, repetitive workloads when issuing national service invoices (NFS-e) through official government portals.
 
-> **Status:** In progress 🚧
+## 🖥️ System Architecture & Source Code
 
-## Features
-- Reads an `.xlsx` draft file from the `executar/` folder
-- Detects the location (city/state) inside the spreadsheet
-- Picks the correct client tax ID (CNPJ) for that location
-- Logs in and fills the invoice form automatically (Playwright)
-- Pauses for human review and saves the tax rate back to the spreadsheet
+### 1. Variables Management & Data Parsing
+Features secure parameter loading, dynamic accounting logic mappings, and structural Excel (`xlsx`) coordinate lookups.
+![Code Architecture](./code01.png)
 
-## Tech stack
-- Node.js
-- Playwright (browser automation)
-- SheetJS / xlsx (Excel reading and writing)
-- dotenv (environment variables)
+### 2. Browser Automation Engine & Hybrid Human-in-the-Loop Workflow
+Handles live browser manipulation (Playwright), dynamic regex masking (`.replace(/\D/g, '')`), government portal selector monitoring, and an engineered stateful pause allowing human-in-the-loop validation for tax rates.
+![Automation Engine](./code02.png)
 
-## Setup
-```bash
-npm install
-npx playwright install chromium
-```
+---
 
-1. Copy `.env.example` to `.env` and add your login.
-2. Copy `tomadores.example.json` to `tomadores.json` and add the client tax IDs.
-3. Put the Excel draft inside the `executar/` folder.
+## 💡 System Intelligence & Business Logic
+Unlike static scripts, this robot uses advanced workflows to dynamically process secure accounting pipelines:
+- **Dynamic Ledger Data:** Built-in capability to parse local file structures to automate bulk submissions safely.
+- **Spreadsheet Automation:** Integrates smoothly with Excel systems (`xlsx` library) to read data matrices, map keys, and inject variables back into spreadsheet cells dynamically upon success.
 
-## Run
-```bash
-node emissor.js
-```
+## 🛠️ Tech Stack
+- **Node.js**: Asynchronous server runtime environment.
+- **Playwright**: Modern end-to-end browser automation framework.
+- **XLSX (SheetJS)**: Advanced spreadsheet reading and ledger parsing.
+- **Dotenv**: Secure separation of application code from sensitive environment parameters.
 
-## Security
-Credentials and client data are **not** stored in the code.
-They live in `.env` and `tomadores.json`, which are ignored by Git.
-
-## Author
-Larissa Souza — IT Support | Networking | Infrastructure | Data Analysis
+## 🎛️ Key Technical Architecture
+- **Data Protection (Security First):** Corporate registry credentials, passwords, and sensitive keys are decoupled from the core script and safely loaded via local environment variables (`.env`).
+- **Resilient Waiting Mechanisms:** Built with native try/catch defensive blocks, custom readline shell terminals, and dynamic event listeners (`networkidle`) to handle slow or unstable government endpoints.
