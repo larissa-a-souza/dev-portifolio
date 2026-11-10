@@ -1,21 +1,34 @@
-# DRE Dashboard — Planned vs Actual
+# Integrated Financial DRE & Fleet Expense Dashboard 📊🚚
 
-Interactive income statement (DRE) that compares planned and actual values by month.
+An enterprise-grade operational intelligence dashboard that unifies daily expense logging, fleet management controls, and an interactive Budget Statement (Planned vs. Actual) with automated compliance auditing.
 
-> **Status:** Prototype 🚧 (sample data only)
+> **Status:** Completed Prototype 🚧 (Sample & Demo data only)
 
-## Features
-- Choose which columns to show: Planned, Actual, Variance ($), Variance (%)
-- Automatic calculated rows (net revenue, contribution margin, EBITDA, operating result)
-- Green and red colors show favorable and unfavorable variance
-- Light and dark mode
+## 🖥️ System Interface & Analytics
 
-## Tech stack
-HTML, CSS and JavaScript (no libraries).
+### 1. Unified Budgetary Control Panel (DRE)
+Features real-time comparative structures tracking company performance across custom operational timeframes.
+![DRE Dashboard](./dashboard.png)
 
-## How to run
-Download the repository and open `index.html` in your browser.
+### 2. Operational Variance Engine (Planned vs. Actual)
+Executes instant currency ($) and percentage (%) deviation analyses. Includes conditional UI formatting: **Green** for favorable budget tracking (savings) and **Red** for overspending.
+![Variance Analysis](./dre-comparativo.png)
 
-## Next steps
-- Make the filters and the period fields work
-- Load real data from a spreadsheet (CSV/Excel)
+### 3. Granular Ledger Audit System
+A structured financial data grid optimized for auditing deep metrics like Month, Region, Team, Asset plates, Category, and Final Values.
+![Financial Audit](./dre.png)
+
+---
+
+## 💡 Key Architectural Features
+- **Fleet Asset Tracking:** Relational matrix enabling operational managers to completely isolate logistics costs per individual vehicle license plate.
+- **Role-Based Compliance Data:** Segregated visualization pipelines—operational sectors focus strictly on localized departmental entries, while board directors audit global analytics.
+- **Smart Data Persistence:** Daily operational expenses dynamically compute on-the-fly, while strategic monthly targets can be inputted locally and preserved via local browser environment mechanics.
+
+## 🛠️ Tech Stack
+- **Frontend Core:** Semantical HTML5 & Responsive layouts.
+- **Styling Architecture:** Pure CSS3 containing advanced structural grid systems and conditional visual states.
+- **Calculation Engine:** Vanilla JavaScript handling multi-level functional matrices and real-time ledger outputs (EBITDA, Net Revenue, Contribution Margin) without external frameworks.
+
+---
+*Developed by Larissa Souza — Open to global remote roles in IT Support, Infrastructure, and Automation.*
