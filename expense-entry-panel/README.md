@@ -1,19 +1,24 @@
-# Expense Entry Panel
+# Expense Entry Panel 📊💸
 
-Panel to register and review expenses by department (fleet, warehouse, HR, finance, board), with filters, totals and an access profile per sector.
+An administrative dashboard built to log, filter, and track corporate expenses by department (fleet, HR, finance, etc.).
 
-> **Status:** Prototype 🚧 (sample data only, login not connected yet)
+## 🖥️ System Interface
 
-## Features
-- Choose a department to simulate access
-- Register expenses with supplier, value, category and date
-- Filters by period and supplier, sortable table, totals
-- Finance and board see all departments; other sectors only see their own
+### Financial Dashboard & Analytics
+![Dashboard Screen](./dashboard_painel.png)
 
-## Tech stack
-HTML, CSS and JavaScript (no libraries).
+### Role-Based Sector Selection
+![Modules Screen](./modulos.png)
 
-## How to run
-Download the repository and open `index.html` in your browser.
+### Expense Table by Department
+![Table Screen](./tabela.png)
 
-Company names, people and plates in this repository are fictional.
+> **Status:** Prototype 🚧
+
+## 🛠 Tech Stack
+- HTML5, CSS3, and JavaScript
+
+## 💡 Key Features
+- **Role-Based Simulation:** Allows switching between profiles to test view permissions.
+- **Data Privacy:** Financial managers and board members can audit all entries, while operational sectors only see their respective department logs.
+- **Interactive Tables:** Filter expenses by supplier, date range, or sort by costs.
