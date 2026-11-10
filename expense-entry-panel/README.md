@@ -11,7 +11,7 @@ An administrative dashboard built to log, filter, and track corporate expenses b
 ![Modules Screen](./modulos.png)
 
 ### Expense Table by Department
-![Table Screen](./tabela.png)
+![Table Screen](./tabelas.png)
 
 > **Status:** Prototype 🚧
 
